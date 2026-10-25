@@ -1,0 +1,14 @@
+{
+  "name": "oh-my-vim",
+  "private": true,
+  "packageManager": "pnpm@10.24.0",
+  "scripts": {
+    "build": "pnpm -r --filter ./packages/* build",
+    "test": "pnpm -r --filter ./packages/* test",
+    "fidelity": "pnpm -C tools/fidelity run fidelity",
+    "dev": "pnpm -C packages/web dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
