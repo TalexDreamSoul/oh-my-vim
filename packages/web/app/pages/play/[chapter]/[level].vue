@@ -4,11 +4,13 @@ import type { Level } from '@oh-my-vim/core'
 import ModeRing from '~/components/game/ModeRing.vue'
 import SyntaxBar from '~/components/game/SyntaxBar.vue'
 import VimGrid from '~/components/game/VimGrid.vue'
-import KeyCards from '~/components/game/KeyCards.vue'
+import MouseGuide from '~/components/game/MouseGuide.vue'
 import HudPanel from '~/components/game/HudPanel.vue'
 import TermEcho from '~/components/game/TermEcho.vue'
 import GolfScore from '~/components/game/GolfScore.vue'
 import { loadLevel, useEngine } from '~/composables/useEngine'
+
+type Cell = { row: number; col: number }
 
 const route = useRoute()
 const level = ref<Level | null>(null)
@@ -18,6 +20,9 @@ const currentIndex = ref(0)
 const loading = ref(true)
 const error = ref('')
 const game = shallowRef<ReturnType<typeof useEngine> | null>(null)
+const pendingChar = ref('')
+const selectedTargetIndex = ref<number | null>(null)
+const interactionHint = ref('点击字符定位；拖动文字选择；双击字符删除')
 
 const chapterNumber = computed(() => String(route.params.chapter).padStart(2, '0'))
 const lessonNumber = computed(() => String(currentIndex.value + 1).padStart(2, '0'))
@@ -25,13 +30,80 @@ const totalLevels = computed(() => sequenceIds.value.length || 15)
 const progressWidth = computed(() => `${Math.max(8, ((currentIndex.value + 1) / totalLevels.value) * 100)}%`)
 const nextHref = computed(() => nextId.value ? `/play/${nextId.value}` : '/')
 const isLast = computed(() => !nextId.value)
+const targetBuffer = computed(() => {
+  const assertion = level.value?.win.find((item) => item.kind === 'buffer')
+  return assertion?.kind === 'buffer' ? assertion.value : level.value?.setup.buffer ?? []
+})
 
 function startGame(): void {
-  if (level.value) game.value = useEngine(level.value)
+  if (level.value) {
+    game.value = useEngine(level.value)
+    pendingChar.value = ''
+    selectedTargetIndex.value = null
+    interactionHint.value = '点击字符定位；拖动文字选择；双击字符删除'
+  }
 }
 
-function sendCard(key: string): void {
-  game.value?.send(key)
+function movementSequence(from: Cell, to: Cell): string {
+  const keys: string[] = []
+  const vertical = to.row - from.row
+  const horizontal = to.col - from.col
+  if (vertical > 0) keys.push(...Array.from({ length: vertical }, () => 'j'))
+  if (vertical < 0) keys.push(...Array.from({ length: -vertical }, () => 'k'))
+  if (horizontal > 0) keys.push(...Array.from({ length: horizontal }, () => 'l'))
+  if (horizontal < 0) keys.push(...Array.from({ length: -horizontal }, () => 'h'))
+  return keys.join('')
+}
+
+function normalPrefix(): string {
+  return game.value?.state.value.mode === 'NORMAL' ? '' : '<Esc>'
+}
+
+function moveTo(cell: Cell): void {
+  const state = game.value?.state.value
+  if (!state) return
+  const sequence = normalPrefix() + movementSequence(state.cursor, cell)
+  if (sequence) game.value?.send(sequence)
+  interactionHint.value = `光标已定位到第 ${cell.row + 1} 行第 ${cell.col + 1} 列`
+}
+
+function pickTargetCharacter(character: string, index: number): void {
+  pendingChar.value = character
+  selectedTargetIndex.value = index
+  interactionHint.value = `已选中「${character === ' ' ? '空格' : character}」，点击编辑器里的落点`
+}
+
+function clearTargetCharacter(): void {
+  pendingChar.value = ''
+  selectedTargetIndex.value = null
+  interactionHint.value = '点击字符定位；拖动文字选择；双击字符删除'
+}
+
+function placeEditorCell(row: number, col: number): void {
+  const state = game.value?.state.value
+  if (!state) return
+  if (pendingChar.value) {
+    const inserted = pendingChar.value === ' ' ? ' ' : pendingChar.value
+    game.value?.send(`${normalPrefix()}${movementSequence(state.cursor, { row, col })}i${inserted}<Esc>`)
+    interactionHint.value = `已把「${inserted === ' ' ? '空格' : inserted}」放入第 ${row + 1} 行`
+    clearTargetCharacter()
+    return
+  }
+  moveTo({ row, col })
+}
+
+function removeEditorCell(row: number, col: number): void {
+  const state = game.value?.state.value
+  if (!state) return
+  game.value?.send(`${normalPrefix()}${movementSequence(state.cursor, { row, col })}x`)
+  interactionHint.value = `已移除第 ${row + 1} 行的字符`
+}
+
+function selectEditorRange(start: Cell, end: Cell): void {
+  const state = game.value?.state.value
+  if (!state) return
+  game.value?.send(`${normalPrefix()}${movementSequence(state.cursor, start)}v${movementSequence(start, end)}`)
+  interactionHint.value = `已选择第 ${start.row + 1} 行到第 ${end.row + 1} 行的范围`
 }
 
 function closeWin(): void {
@@ -78,10 +150,10 @@ onMounted(async () => {
         <div class="mission-card">
           <span class="mission-label">本关目标</span>
           <strong>让 buffer 变成你想要的样子</strong>
-          <p>点击右侧动作卡，观察 Vim 的模式和光标如何一起变化。</p>
+          <p>直接在编辑器里点、拖、双击，系统会把你的动作翻译成 Vim 语法。</p>
         </div>
 
-        <div class="click-note"><span class="click-dot" aria-hidden="true"></span><span>全程点击卡牌<br>不需要实体键盘</span></div>
+        <div class="click-note"><span class="click-dot" aria-hidden="true"></span><span>只用鼠标 / 触摸<br>不用实体键盘</span></div>
         <ModeRing :state="game.state.value" />
       </aside>
 
@@ -89,19 +161,30 @@ onMounted(async () => {
         <div class="workspace-heading">
           <div>
             <span class="workspace-kicker">LIVE BUFFER</span>
-            <h2>把动作放进编辑器</h2>
+            <h2>直接在文本上操作</h2>
           </div>
           <TermEcho :state="game.state.value" />
         </div>
         <SyntaxBar :chunks="game.syntax.value" />
-        <VimGrid :state="game.state.value" />
+        <VimGrid
+          :state="game.state.value"
+          @place="placeEditorCell"
+          @remove="removeEditorCell"
+          @select="selectEditorRange"
+        />
         <div class="workspace-lower">
           <HudPanel :state="game.state.value" />
           <GolfScore :strokes="game.state.value.keystrokes" :solution="level.solution" />
         </div>
       </section>
 
-      <KeyCards class="command-deck" :cards="level.cards ?? undefined" :mode="game.state.value.mode" @send="sendCard" />
+      <MouseGuide
+        :lines="targetBuffer"
+        :selected-index="selectedTargetIndex"
+        :hint="interactionHint"
+        @pick="pickTargetCharacter"
+        @clear="clearTargetCharacter"
+      />
     </div>
 
     <div v-if="game.won.value" class="win-overlay" role="presentation" @click.self="closeWin">
@@ -208,7 +291,7 @@ onMounted(async () => {
 
 .lesson-rail,
 .workspace,
-.command-deck {
+.gesture-panel {
   min-width: 0;
   border: 1px solid var(--line);
   background: var(--surface);
@@ -291,8 +374,7 @@ onMounted(async () => {
 
 @media (max-width: 1120px) {
   .game-layout { grid-template-columns: minmax(190px, 0.75fr) minmax(0, 1.65fr); }
-  .command-deck { grid-column: 1 / -1; }
-  .command-deck :deep(.card-stack) { grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); }
+  .gesture-panel { grid-column: 1 / -1; }
 }
 
 @media (max-width: 760px) {
@@ -300,7 +382,7 @@ onMounted(async () => {
   .app-bar { align-items: flex-start; }
   .breadcrumb { display: none; }
   .game-layout { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-  .lesson-rail, .workspace, .command-deck { width: 100%; }
+  .lesson-rail, .workspace, .gesture-panel { width: 100%; }
   .lesson-rail { position: static; padding: 20px; }
   .lesson-rail h1 { max-width: none; font-size: 24px; }
   .lesson-rail :deep(.mode-panel) { margin-top: 20px; }

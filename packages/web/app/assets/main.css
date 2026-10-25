@@ -91,22 +91,23 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent-yellow);
 .golf-meter { height: 4px; margin-top: 14px; overflow: hidden; background: var(--line); border-radius: 99px; }
 .golf-meter span { display: block; height: 100%; background: var(--accent-yellow); transition: width 220ms ease-out; }
 
-.command-deck { padding: 19px; border-radius: 18px; background: var(--surface); }
-.deck-heading { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
-.deck-heading h2 { margin: 6px 0 0; color: var(--ink); font-size: 17px; line-height: 1.2; letter-spacing: -0.03em; }
-.click-only { display: inline-flex; align-items: center; gap: 6px; color: var(--accent-yellow); font-family: var(--font-mono); font-size: 9px; white-space: nowrap; }
-.deck-intro { margin: 12px 0 16px; color: var(--muted); font-size: 11px; line-height: 1.55; }
-.card-stack { display: grid; gap: 8px; }
-.command-card { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 5px 9px; min-width: 0; padding: 11px; color: var(--ink); border: 1px solid var(--line); border-radius: 9px; background: var(--surface-raised); text-align: left; cursor: pointer; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.23); transition: border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out, box-shadow 150ms ease-out; }
-.command-card:hover { border-color: var(--accent-yellow); background: var(--surface-bright); transform: translateY(-2px); box-shadow: 0 5px 0 rgba(0, 0, 0, 0.23); }
-.command-card:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.23); }
-.card-topline { display: flex; align-items: center; justify-content: space-between; grid-column: 1 / -1; }
-.command-card kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; min-height: 27px; padding: 0 7px; color: var(--ink-dark); border-radius: 5px; background: var(--accent-yellow); font-family: var(--font-mono); font-size: 13px; font-weight: 900; }
-.command-card.tone-insert kbd { background: var(--accent-blue); }.command-card.tone-edit kbd { background: var(--accent-coral); }.command-card.tone-escape kbd { background: var(--accent-green); }.command-card.tone-select kbd { background: #b8a0ed; }
-.card-index { color: var(--muted); font-family: var(--font-mono); font-size: 9px; }
-.command-card strong { min-width: 0; overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.command-card > span:last-child { grid-column: 1 / -1; color: var(--muted); font-size: 10px; }
-
-@media (max-width: 1120px) { .card-stack { grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); } }
+.gesture-panel { padding: 19px; border-radius: 18px; background: var(--surface); }
+.gesture-heading { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+.gesture-heading h2 { margin: 6px 0 0; color: var(--ink); font-size: 18px; line-height: 1.2; letter-spacing: -0.03em; }
+.mouse-only { display: inline-flex; align-items: center; gap: 6px; color: var(--accent-yellow); font-family: var(--font-mono); font-size: 9px; white-space: nowrap; }
+.gesture-intro { margin: 12px 0 16px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.gesture-steps { display: grid; gap: 6px; margin-bottom: 17px; }
+.gesture-steps div { display: grid; grid-template-columns: 25px 1fr; gap: 8px; align-items: center; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-raised); }
+.gesture-steps strong { color: var(--accent-coral); font-family: var(--font-mono); font-size: 10px; }
+.gesture-steps span { color: var(--ink-soft); font-size: 11px; font-weight: 750; }
+.gesture-steps small { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 400; }
+.target-tray { padding: 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface-deep); }
+.target-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }.target-heading > span:last-child { color: var(--muted); font-size: 10px; }
+.target-line { display: flex; align-items: center; min-height: 34px; font-family: var(--font-mono); }
+.target-character { min-width: 24px; min-height: 28px; padding: 0 4px; color: var(--ink); background: transparent; border-bottom: 2px solid var(--line); font-family: inherit; font-size: 17px; cursor: pointer; transition: color 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out; }
+.target-character:hover { color: var(--ink-dark); background: var(--accent-yellow); border-color: var(--accent-yellow); }.target-character.selected { color: var(--ink-dark); background: var(--accent-coral); border-color: var(--accent-coral); }
+.gesture-status { display: flex; align-items: center; gap: 8px; min-height: 40px; margin-top: 12px; padding: 9px 10px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; font-size: 10px; line-height: 1.4; }.gesture-status.armed { color: var(--ink); border-color: var(--accent-yellow); }.status-led { width: 6px; height: 6px; flex: 0 0 auto; background: var(--line-strong); border-radius: 50%; }.gesture-status.armed .status-led { background: var(--accent-yellow); }.gesture-status button { margin-left: auto; padding: 0; color: var(--accent-yellow); background: transparent; font-size: 10px; cursor: pointer; }
+.editor-char { cursor: crosshair; transition: color 120ms ease-out, background 120ms ease-out; }.editor-char:hover { color: var(--ink-dark); background: var(--accent-blue); }.editor-body { user-select: none; }
+@media (max-width: 760px) { .gesture-steps { grid-template-columns: repeat(3, 1fr); }.gesture-steps div { display: block; }.gesture-steps strong { display: block; margin-bottom: 5px; }.target-heading > span:last-child { display: none; } }
 @media (max-width: 760px) { .mode-list { grid-template-columns: 1fr 1fr; }.mode-item { grid-template-columns: 8px 1fr; }.mode-id { display: none; }.state-panel { grid-template-columns: 1fr 1fr; }.syntax-help { display: none; }.editor-body { min-height: 150px; padding: 18px 10px; font-size: 14px; }.line-content { padding-left: 12px; } }
-@media (prefers-reduced-motion: reduce) { .golf-meter span, .command-card { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .golf-meter span, .target-character, .editor-char { transition: none; } }
