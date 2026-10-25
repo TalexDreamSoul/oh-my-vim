@@ -1,0 +1,22 @@
+title = 数词：3w 2dd
+chapter = 4
+cards = d, w, 3, 2
+
+[description]
+数词是语法里的数量：3w 表示把 w 这个名词动作执行三次。
+d3w 与 3dw 都是「d 动词 + 3 数词 + w 名词」，最终删除三个词。
+随后用 2dd 把当前行和下一行一起删除，体会数量如何乘上范围。
+
+[setup]
+buffer = "one two three four\nkeep\nlast"
+cursor = 0,0
+
+[win]
+buffer == "last"
+keystrokes <= 14
+
+[solution]
+3w0d3w2dd
+
+[congrats]
+数词一加入，短短几颗键就能搬动成片文字！

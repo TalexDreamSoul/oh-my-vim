@@ -1,0 +1,23 @@
+title = 上下求索：j k
+chapter = 1
+cards = j, k, 0, $
+
+[description]
+j、k 是上下移动的方向键，0 和 $ 则把你送到一行的两端。
+这一关的 buffer 有两行，移动时留意光标的行列坐标如何改变。
+它们都是名词式的移动，不会改动任何文字。
+
+[setup]
+buffer = "one two\nthree four"
+cursor = 0,0
+
+[win]
+buffer == "one two\nthree four"
+cursor == 0,6
+keystrokes <= 6
+
+[solution]
+j0k$
+
+[congrats]
+上下左右已经连成一张地图，迷路时先看光标坐标！

@@ -1,0 +1,3 @@
+{
+  "name":"@oh-my-vim/web","private":true,"type":"module","scripts":{"dev":"nuxt dev","build":"nuxt build"},"dependencies":{"nuxt":"^4.4.2","@unocss/nuxt":"^66.1.0","@oh-my-vim/core":"workspace:*"}
+}

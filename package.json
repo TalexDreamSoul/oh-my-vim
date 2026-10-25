@@ -3,12 +3,17 @@
   "private": true,
   "packageManager": "pnpm@10.24.0",
   "scripts": {
-    "build": "pnpm -r --filter ./packages/* build",
-    "test": "pnpm -r --filter ./packages/* test",
+    "build": "pnpm -C packages/core typecheck && pnpm -C packages/web build",
+    "test": "pnpm -C packages/core test && pnpm check:levels && pnpm fidelity",
     "fidelity": "pnpm -C tools/fidelity run fidelity",
+    "check:levels": "tsx scripts/check-levels.ts",
     "dev": "pnpm -C packages/web dev"
   },
+  "dependencies": {
+    "@oh-my-vim/core": "workspace:*"
+  },
   "devDependencies": {
+    "tsx": "^4.20.0",
     "typescript": "^5.9.3"
   }
 }

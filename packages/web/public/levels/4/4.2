@@ -1,0 +1,22 @@
+title = 文本对象：iw aw ip
+chapter = 4
+cards = d, w, i, a, ", p, dd, j
+
+[description]
+文本对象是带边界的名词：iw 取词内，aw 取词及周围空白，i" 与 a" 取引号内外。
+ip 则把一个段落当作对象；动词 d 放在前面，就得到可读的 d + 文本对象语法。
+本关逐个清空第一行，再用 dip 清理最后一段，感受边界由对象负责。
+
+[setup]
+buffer = "alpha \"hello\" beta\n\nkeep"
+cursor = 0,1
+
+[win]
+buffer == ""
+keystrokes <= 28
+
+[solution]
+diwwdi"da"wdawddjdipdd
+
+[congrats]
+当对象替你画好边界，删除就不再靠猜！

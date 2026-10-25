@@ -1,0 +1,23 @@
+title = 一行之内：0 $ ^ f{char}
+chapter = 2
+cards = 0, $, ^, f, F, t, T
+
+[description]
+0、$、^ 分别抵达行首、行尾和第一个非空白字符。
+f、F、t、T 都是找字符的名词动作：找得到、停在前面或停在后面各有差别。
+本关故意把四种找法串在一起，留意每次字符参数如何成为语法的一部分。
+
+[setup]
+buffer = "alpha beta"
+cursor = 0,0
+
+[win]
+buffer == "alpha beta"
+cursor == 0,5
+keystrokes <= 15
+
+[solution]
+$0^fbThFatb
+
+[congrats]
+一行之内也有经纬度，找字符就是你的精确导航仪！

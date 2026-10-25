@@ -1,0 +1,22 @@
+title = 逃出生天：i 与 Esc
+chapter = 1
+cards = i, Esc
+
+[description]
+i 是进入 INSERT 的动词，随后输入的字符会真正写进 buffer。
+按下 Esc 结束插入并回到 NORMAL；Esc 本身不写入文字。
+把 X 放在单词中间，观察光标和模式各自的变化。
+
+[setup]
+buffer = "vim"
+cursor = 0,1
+
+[win]
+buffer == "vXim"
+keystrokes <= 6
+
+[solution]
+iX<Esc>
+
+[congrats]
+你已经能安全落笔，也能及时收刀了！

@@ -1,0 +1,1 @@
+<script setup lang="ts">import type {EngineState} from '@oh-my-vim/core';defineProps<{state:EngineState}>()</script><template><div class="term">{{state.message||'就绪'}} <span class="keys">击键 {{state.keystrokes}}</span></div></template><style scoped>.term{padding:12px;background:#020617;color:#86efac;border-radius:8px}.keys{float:right;color:#94a3b8}</style>

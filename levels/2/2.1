@@ -1,0 +1,23 @@
+title = 词间跳跃：w b e
+chapter = 2
+cards = w, b, e
+
+[description]
+w 向后跳到下一个词首，b 向前回到词首，e 则停在当前词尾。
+把它们看成名词动作：光标寻找的是「词」，不是单个字符。
+连续组合 w、b、e，感受跳跃和逐格移动的速度差异。
+
+[setup]
+buffer = "one two three"
+cursor = 0,0
+
+[win]
+buffer == "one two three"
+cursor == 0,6
+keystrokes <= 6
+
+[solution]
+webe
+
+[congrats]
+词语之间的高速公路已经为你开通！

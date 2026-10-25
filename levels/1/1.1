@@ -1,0 +1,22 @@
+title = 打开即懂：h l 移动
+chapter = 1
+cards = h, l, i, a, X, Y, Esc
+
+[description]
+先用 h、l 在 NORMAL 模式左右移动，光标就像小船一样逐格靠岸。
+i 是动词「进入插入」，a 是「在光标后插入」，Esc 则把你带回 NORMAL。
+注意模式环的颜色变化：同一颗字母在不同模式里有不同身份。
+
+[setup]
+buffer = "cat"
+cursor = 0,0
+
+[win]
+buffer == "cYXat"
+keystrokes <= 9
+
+[solution]
+liX<Esc>haY<Esc>
+
+[congrats]
+恭喜你，已经学会在 NORMAL 与 INSERT 之间换挡了！

@@ -1,0 +1,21 @@
+{
+  "name": "@oh-my-vim/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./level": "./src/level.ts",
+    "./levels-node": "./src/levels-node.ts"
+  },
+  "scripts": {
+    "test": "tsx --test tests/*.test.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3",
+    "@types/node": "^24.0.0"
+  }
+}

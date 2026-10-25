@@ -1,0 +1,22 @@
+title = 改变之刃：c r s
+chapter = 3
+cards = c, w, r, R, s, S
+
+[description]
+c 是改变动词，cw、cc 把改变范围交给词或整行；r 与 R 分别替换一个字符和连续字符。
+s 是替换字符，S 是替换整行，范围不同但都从改变开始。
+请观察 INSERT、REPLACE 与 NORMAL 三种模式如何接力完成同一轮修整。
+
+[setup]
+buffer = "one two\nabc"
+cursor = 0,0
+
+[win]
+buffer == "DEF\nabc"
+keystrokes <= 35
+
+[solution]
+cwX<Esc>rYRZ<Esc>sQ<Esc>Sabc<Esc>ccDEF<Esc>
+
+[congrats]
+改变不是破坏，而是把旧句子打磨成新形状！

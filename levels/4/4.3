@@ -1,0 +1,22 @@
+title = 语法组合关：ciw ci" dap
+chapter = 4
+cards = c, i, w, ", d, a, p
+
+[description]
+组合语法把 c 这个动词和 iw、i" 这些名词对象拼起来，ciw 与 ci" 就是精准改变。
+dap 则用 d 删除一个段落对象，范围由 ap 决定而不是由 d 猜测。
+这是一道小挑战：先改词、再改引号内容，最后删除整段。
+
+[setup]
+buffer = "hello \"quoted\"\n\nkeep"
+cursor = 0,1
+
+[win]
+buffer == "keep"
+keystrokes <= 18
+
+[solution]
+ciwX<Esc>f"ci"Y<Esc>dap
+
+[congrats]
+动词找到对象，复杂命令也会变成一句清楚的话！

@@ -1,0 +1,1 @@
+<script setup lang="ts">defineProps<{strokes:number;solution:string}>()</script><template><div class="score">击键 <b>{{strokes}}</b>　金线 <b>{{solution.length}}</b>　银线 <b>{{Math.round(solution.length*1.5)}}</b></div></template><style scoped>.score{color:#cbd5e1;padding:10px 0}.score b{color:#fbbf24}</style>

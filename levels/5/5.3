@@ -1,0 +1,21 @@
+title = 时光机：u C-r
+chapter = 5
+
+[description]
+u 撤销最近一次编辑，C-r 则把撤销的编辑重做回来。
+每次按键都是快照，正如 oh-my-git 的时光机一样；移动键不会改变文字快照。
+本关只需完成一次插入、撤销和重做，确认状态可以往返。
+
+[setup]
+buffer = "one"
+cursor = 0,0
+
+[win]
+buffer == "Xone"
+keystrokes <= 8
+
+[solution]
+iX<Esc>u<C-r>
+
+[congrats]
+你已经学会穿梭时间线，错误也能安全回到手里！

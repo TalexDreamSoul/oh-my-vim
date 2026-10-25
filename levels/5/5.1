@@ -1,0 +1,22 @@
+title = Visual 三态：v V C-v
+chapter = 5
+cards = v, V, C-v, l, j, x
+
+[description]
+v 进入字符选择，V 进入整行选择，C-v 则进入矩形块选择。
+三种 Visual 模式都先选范围，再用 x 这个动词执行删除；选择本身不会立刻改 buffer。
+本关依次删掉字符、两行和一小块列，体验 v1 对块选择的有限支持。
+
+[setup]
+buffer = "abcde\nfghij\nklmno"
+cursor = 0,1
+
+[win]
+buffer == "mno"
+keystrokes <= 18
+
+[solution]
+vllxVjx<C-v>lx
+
+[congrats]
+选择范围由你掌舵，Visual 三态已经全部点亮！

@@ -1,0 +1,22 @@
+title = 复制粘贴：y p P
+chapter = 3
+cards = y, yy, p, P
+
+[description]
+y 是复制动词，yy 复制整行并放入无名寄存器；p、P 分别在后方和前方粘贴。
+寄存器 HUD 会显示这段暂存内容，粘贴不会消耗它。
+先复制第一行，再到下一行后粘贴一次、前粘贴一次。
+
+[setup]
+buffer = "red blue\ngreen"
+cursor = 0,0
+
+[win]
+buffer == "red blue\ngreen\nred blue\nred blue"
+keystrokes <= 8
+
+[solution]
+yyjpP
+
+[congrats]
+寄存器记得住，你的第一份复制粘贴流水线完成了！

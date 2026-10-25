@@ -1,0 +1,22 @@
+title = 搜索替换：/ n
+chapter = 5
+cards = /, n, N, *, :, %, s, g
+
+[description]
+/ 搜索文字，n 与 N 在匹配结果之间前后跳转，* 则以当前词为搜索目标。
+搜索是名词动作，不改 buffer；:%s/cat/fox/g 才是替换动词，g 表示整行全部匹配。
+先练习找路，再执行一次全局替换，观察命令行回显。
+
+[setup]
+buffer = "cat dog cat\ncat"
+cursor = 0,0
+
+[win]
+buffer == "fox dog fox\nfox"
+keystrokes <= 35
+
+[solution]
+/cat<Enter>nN*:%s/cat/fox/g<Enter>
+
+[congrats]
+搜索负责发现，替换负责行动，你已经能让整份 buffer 同步变身！

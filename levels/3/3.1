@@ -1,0 +1,22 @@
+title = 删除之刃：x dd
+chapter = 3
+cards = x, X, dd
+
+[description]
+x 删除光标下的字符，X 删除光标前的字符；它们都是单字符动词。
+dd 把整行当作对象删除，两个 d 组成一条完整语法。
+先削掉 b，再削掉 a，最后用 dd 清理整行。
+
+[setup]
+buffer = "abc\ndef"
+cursor = 0,1
+
+[win]
+buffer == "def"
+keystrokes <= 6
+
+[solution]
+xXdd
+
+[congrats]
+刀口收放自如，删除也能像编辑一样优雅！

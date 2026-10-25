@@ -34,9 +34,9 @@ d3w
 | `chapter` | ✅ | 章节号 1..N |
 | `cards` | ❌ | 键帽卡牌白名单，逗号分隔（`d, w, 3`）；省略 = 该关禁用卡牌（挑战/徽章关） |
 | `[description]` | ✅ | 教学正文（Markdown） |
-| `[setup]` `buffer` | ✅ | 初始 buffer，双引号包裹的单行文本（v1 不做多行，详见下文） |
+| `[setup]` `buffer` | ✅ | 初始 buffer，双引号包裹；多行用 `\n` 转义（`"line1\nline2"`）；v1 仅 ASCII 内容 |
 | `[setup]` `cursor` | ✅ | 初始光标 `row,col`（0 基） |
-| `[win]` | ✅ | 断言块，每行一条，支持 `buffer ==`、`cursor == r,c`、`keystrokes <= N` |
+| `[win]` | ✅ | 断言块，每行一条：`buffer == "…"`（同样支持 `\n` 转义多行比较）、`cursor == r,c`、`keystrokes <= N` |
 | `[solution]` | ✅ | 已知解按键序列（golf 金线依据；CI 可解性校验用） |
 | `[congrats]` | ❌ | 通关彩蛋文案 |
 
@@ -45,14 +45,14 @@ d3w
 - 不做 buffer 指针/分支等高级断言（`marks ==`、`register[a-z] ==` 留到 v2）
 - 不做水平滚动/长行折叠
 - 不做输入时校验 `solution` 必须通关——CI 跑「solution → 引擎回放 → win 断言」作为关卡可解性的**唯一**真值
-- 多行 buffer v1.1 再开（`buffer` 换用 `\n` 转义的多行字段），首批关卡单行为主，最多加少量双行关卡在低层关卡白名单校验中保证
+- buffer v1 仅限 ASCII（规避 Vim 列号的字节/字符歧义），中文只出现在标题与教学文案；单行关卡为主，多行关卡不超过 3 行（章节 3/4 用）
 
 ## 解析器契约
 
-由 `packages/core/src/level.ts` 导出：
+浏览器安全入口 `packages/core/src/level.ts` 导出：
 ```ts
 parseLevel(source: string): Level          // 抛 LevelParseError 时必须给出字段名
-parseLevels(dir: string): Level[]          // 按 (chapter, 文件名自然排序) 排序
 checkWin(level, result): { ok: boolean; failed: string[] }  // 回放 solution/玩家按键后判胜
 ```
+Node/CI 内容工具从 `packages/core/src/levels-node.ts` 导出 `parseLevels(dir)`，按 `(chapter, 文件名自然排序)` 读取目录；不要从浏览器入口引入 `node:fs`。
 `levels/sequence` 是保留文件（非目录），内容为以空格分隔的关卡 ID 有序列表，定义闯关顺序。

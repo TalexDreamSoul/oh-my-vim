@@ -1,0 +1,23 @@
+title = 纵横天下：gg G { }
+chapter = 2
+cards = gg, G, {, }
+
+[description]
+gg 和 G 负责在整份 buffer 的首尾之间穿梭，{ 与 } 则按段落跳跃。
+段落由空行分隔，移动的是光标而不是文字。
+把四个动作连起来，体会「全局」和「局部段落」两套坐标系。
+
+[setup]
+buffer = "one\n\ntwo"
+cursor = 2,0
+
+[win]
+buffer == "one\n\ntwo"
+cursor == 2,0
+keystrokes <= 8
+
+[solution]
+ggG{}
+
+[congrats]
+从文件顶端到段落边界，你已经拥有纵横全局的视野！
