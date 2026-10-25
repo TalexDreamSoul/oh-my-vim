@@ -18,12 +18,13 @@ export function useEngine(level: Level) {
   const state = ref<EngineState>(engine.state)
   const won = ref(false)
   const syntax = ref(engine.pendingSyntax)
+  const solutionExpectsNormal = level.solution.includes('<Esc>')
 
   function syncState(): void {
     state.value = engine.state
     syntax.value = engine.pendingSyntax
     const verdict = checkWin(level, state.value)
-    if (verdict.ok && !won.value) {
+    if (verdict.ok && (!solutionExpectsNormal || state.value.mode === 'NORMAL') && !won.value) {
       won.value = true
       const strokes = state.value.keystrokes
       const gold = strokes <= level.solution.length
