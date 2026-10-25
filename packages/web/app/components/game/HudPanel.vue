@@ -1,1 +1,22 @@
-<script setup lang="ts">import type {EngineState} from '@oh-my-vim/core';defineProps<{state:EngineState}>()</script><template><aside class="hud"><b>寄存器</b><pre>{{state.registers}}</pre><b>标记</b><pre>{{state.marks}}</pre></aside></template><style scoped>.hud{padding:14px;background:#172033;border-radius:10px;color:#cbd5e1}.hud pre{font-size:11px;max-height:100px;overflow:auto}</style>
+<script setup lang="ts">
+import type { EngineState } from '@oh-my-vim/core'
+
+defineProps<{ state: EngineState }>()
+
+function formatJson(value: Record<string, string>): string {
+  return JSON.stringify(value, null, 2)
+}
+</script>
+
+<template>
+<section class="state-panel" aria-label="Vim 状态">
+  <div class="state-block">
+    <div class="state-title"><span class="state-icon">"</span>寄存器</div>
+    <pre>{{ formatJson(state.registers) }}</pre>
+  </div>
+  <div class="state-block">
+    <div class="state-title"><span class="state-icon">✦</span>标记</div>
+    <pre>{{ formatJson(state.marks) }}</pre>
+  </div>
+</section>
+</template>

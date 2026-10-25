@@ -1,1 +1,20 @@
-<script setup lang="ts">defineProps<{chunks:any[]}>()</script><template><div class="syntax"><span v-for="(c,i) in chunks" :key="i" :class="'c-'+c.kind">{{c.text||c.value||c.key}}</span><i v-if="!chunks.length">等待输入…</i></div></template><style scoped>.syntax{display:flex;gap:6px;min-height:32px}.syntax span{padding:6px 10px;border-radius:6px}.c-count{background:#7c3aed}.c-operator{background:#dc2626}.c-motion,.c-textobj{background:#2563eb}.syntax i{color:#64748b;animation:p 1.3s infinite}@keyframes p{50%{opacity:.35}}</style>
+<script setup lang="ts">
+interface SyntaxChunk { text?: string; value?: string; key?: string; kind: string }
+
+defineProps<{ chunks: SyntaxChunk[] }>()
+</script>
+
+<template>
+<section class="syntax-panel" aria-label="Vim 命令轨迹">
+  <div class="syntax-heading">
+    <span class="section-label">命令轨迹</span>
+    <span class="syntax-help">点击动作卡，组合会出现在这里</span>
+  </div>
+  <div class="syntax-line">
+    <span v-if="!chunks.length" class="syntax-empty">等待下一张卡牌…</span>
+    <span v-for="(chunk, index) in chunks" v-else :key="`${chunk.kind}-${index}`" class="syntax-token" :class="`is-${chunk.kind}`">
+      {{ chunk.text || chunk.value || chunk.key }}
+    </span>
+  </div>
+</section>
+</template>

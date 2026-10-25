@@ -1,1 +1,26 @@
-<script setup lang="ts">import type { EngineState } from '@oh-my-vim/core'; defineProps<{state:EngineState}>()</script><template><div class="mode-ring"><span v-for="m in ['NORMAL','INSERT','VISUAL','CMDLINE']" :key="m" :class="{active:state.mode===m}">{{m}}</span></div></template><style scoped>.mode-ring{display:flex;gap:8px;flex-wrap:wrap}.mode-ring span{border:1px solid #334155;border-radius:999px;padding:8px 12px;color:#94a3b8;transition:.2s}.mode-ring .active{color:#fff;background:#7c3aed;border-color:#a78bfa;transform:scale(1.08)}</style>
+<script setup lang="ts">
+import type { EngineState } from '@oh-my-vim/core'
+
+defineProps<{ state: EngineState }>()
+
+const modes = [
+  { id: 'NORMAL', label: '普通', hint: '移动与命令' },
+  { id: 'INSERT', label: '插入', hint: '写入文字' },
+  { id: 'VISUAL', label: '可视', hint: '选择范围' },
+  { id: 'CMDLINE', label: '命令', hint: '执行指令' },
+]
+</script>
+
+<template>
+<aside class="mode-panel" aria-label="当前 Vim 模式">
+  <div class="section-label">当前模式</div>
+  <div class="mode-list">
+    <div v-for="mode in modes" :key="mode.id" class="mode-item" :class="{ active: state.mode === mode.id }">
+      <span class="mode-light" aria-hidden="true"></span>
+      <span class="mode-name">{{ mode.label }}</span>
+      <span class="mode-id">{{ mode.id }}</span>
+      <span class="mode-hint">{{ mode.hint }}</span>
+    </div>
+  </div>
+</aside>
+</template>

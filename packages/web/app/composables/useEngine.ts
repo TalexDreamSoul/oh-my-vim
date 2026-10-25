@@ -3,14 +3,24 @@ import { VimEngine, parseLevel, checkWin, type Level, type EngineState } from '@
 
 export interface LevelProgress { strokes: number; gold: boolean; silver: boolean }
 
+const SPECIAL_CARD_KEYS = new Set([
+  'Esc', 'Enter', 'Backspace', 'Tab', 'Space',
+  'Left', 'Right', 'Up', 'Down',
+  'C-r', 'C-v', 'C-u', 'C-c',
+])
+
+function cardSequence(input: string): string {
+  return SPECIAL_CARD_KEYS.has(input) ? `<${input}>` : input
+}
+
 export function useEngine(level: Level) {
   const engine = new VimEngine({ lines: level.setup.buffer, cursor: level.setup.cursor })
   const state = ref<EngineState>(engine.state)
   const won = ref(false)
   const syntax = ref(engine.pendingSyntax)
 
-  function send(key: string) {
-    state.value = engine.send(key)
+  function syncState(): void {
+    state.value = engine.state
     syntax.value = engine.pendingSyntax
     const verdict = checkWin(level, state.value)
     if (verdict.ok && !won.value) {
@@ -20,6 +30,13 @@ export function useEngine(level: Level) {
       const silver = strokes <= Math.round(level.solution.length * 1.5)
       saveProgress(level, strokes, gold, silver)
     }
+  }
+
+  function send(input: string): void {
+    // Cards may represent one key (h), a chord (C-v), or a short phrase (dd).
+    // Replay keeps all three forms faithful while still counting each stroke.
+    engine.replay(cardSequence(input))
+    syncState()
   }
 
   return { engine, state, syntax, won, send }
